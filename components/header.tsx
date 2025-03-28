@@ -16,7 +16,6 @@ const Header: React.FC = () => {
           displayName: names[index],
           email: `${names[index].toLowerCase()}@gmail.com`,
           photoURL: `https://picsum.photos/seed/${uid}/200/300`,
-          organizationId: `org-${uid}`,
         };
       }),
     []
@@ -42,7 +41,7 @@ const Header: React.FC = () => {
     if (!client || !user) return;
     const veltUser = {
       userId: user.uid,
-      organizationId: "org-user001",
+      organizationId: "organization_id",
       name: user.displayName,
       email: user.email,
       photoUrl: user.photoURL,

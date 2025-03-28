@@ -6,7 +6,6 @@ export type User = {
   displayName: string;
   email: string;
   photoURL: string;
-  organizationId: string;
 };
 
 export interface UserStore {
