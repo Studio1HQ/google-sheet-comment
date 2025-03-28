@@ -7,16 +7,25 @@ import {
   VeltComments,
 } from "@veltdev/react";
 import {
+  CellStyleModule,
   ClientSideRowModelModule,
   GridOptions,
   ModuleRegistry,
+  RowSelectionModule,
+  TextEditorModule,
+  ValidationModule,
 } from "ag-grid-community";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
+
 import { AgGridReact } from "ag-grid-react";
 import React, { useCallback, useMemo, useState } from "react";
 
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule,
+  RowSelectionModule,
+  ValidationModule,
+  TextEditorModule,
+  CellStyleModule,
+]);
 
 const getColumnLabel = (index: number): string => {
   return String.fromCharCode(65 + index);
