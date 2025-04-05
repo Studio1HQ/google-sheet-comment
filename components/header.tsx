@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useMemo } from "react";
 
 const Header: React.FC = () => {
-  const { user, login } = useUserStore();
+  const { user, setUser } = useUserStore();
   const { client } = useVeltClient();
 
   const predefinedUsers = useMemo(
@@ -15,7 +15,6 @@ const Header: React.FC = () => {
           uid: uid,
           displayName: names[index],
           email: `${names[index].toLowerCase()}@gmail.com`,
-          photoURL: `https://picsum.photos/seed/${uid}/200/300`,
         };
       }),
     []
@@ -25,15 +24,15 @@ const Header: React.FC = () => {
     if (typeof window !== "undefined" && !user) {
       const storedUser = localStorage.getItem("user-storage");
       if (!storedUser) {
-        login(predefinedUsers[0]);
+        setUser(predefinedUsers[0]);
       }
     }
-  }, [user, login, predefinedUsers]);
+  }, [user, setUser, predefinedUsers]);
 
   const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedUser = predefinedUsers.find((u) => u.uid === e.target.value);
     if (selectedUser) {
-      login(selectedUser);
+      setUser(selectedUser);
     }
   };
 
@@ -44,7 +43,6 @@ const Header: React.FC = () => {
       organizationId: "organization_id",
       name: user.displayName,
       email: user.email,
-      photoUrl: user.photoURL,
     };
 
     client.identify(veltUser);
@@ -84,7 +82,7 @@ const Header: React.FC = () => {
         ) : (
           <Button
             variant="ghost"
-            onClick={() => login(predefinedUsers[0])}
+            onClick={() => setUser(predefinedUsers[0])}
             className="text-gray-600 hover:bg-gray-100"
           >
             Login

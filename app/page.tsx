@@ -1,31 +1,16 @@
 "use client";
 
 import Header from "@/components/header";
+import { useSetDocument, VeltCommentBubble, VeltComments } from "@veltdev/react";
 import {
-  useSetDocument,
-  VeltCommentBubble,
-  VeltComments,
-} from "@veltdev/react";
-import {
-  CellStyleModule,
-  ClientSideRowModelModule,
+  AllCommunityModule,
   GridOptions,
   ModuleRegistry,
-  RowSelectionModule,
-  TextEditorModule,
-  ValidationModule,
 } from "ag-grid-community";
-
 import { AgGridReact } from "ag-grid-react";
 import React, { useCallback, useMemo, useState } from "react";
 
-ModuleRegistry.registerModules([
-  ClientSideRowModelModule,
-  RowSelectionModule,
-  ValidationModule,
-  TextEditorModule,
-  CellStyleModule,
-]);
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const getColumnLabel = (index: number): string => {
   return String.fromCharCode(65 + index);
@@ -113,50 +98,6 @@ export default function Page() {
           suppressContextMenu={true}
         />
       </div>
-      <style jsx global>{`
-        .ag-theme-alpine {
-          --ag-border-color: transparent;
-          --ag-row-border-width: 0px;
-          --ag-cell-horizontal-border: 1px solid #e0e0e0;
-          --ag-grid-size: 4px;
-          --ag-list-item-height: 24px;
-        }
-        .ag-theme-alpine .ag-cell {
-          border-top: none;
-          border-left: none;
-          border-right: 1px solid #e0e0e0;
-          border-bottom: 1px solid #e0e0e0;
-          padding: 0 4px;
-          height: 24px;
-          line-height: 24px;
-        }
-        .ag-theme-alpine .ag-header-cell {
-          border-top: none;
-          border-left: none;
-          border-right: 1px solid #e0e0e0;
-          border-bottom: 1px solid #e0e0e0;
-          background-color: #f8f9fa;
-          color: #5f6368;
-          font-weight: 500;
-          height: 24px !important;
-        }
-        .ag-theme-alpine .ag-row {
-          border: none;
-          height: 24px !important;
-        }
-        .ag-theme-alpine .ag-cell-focus {
-          border: 2px solid #1a73e8 !important;
-          outline: none;
-        }
-        .ag-theme-alpine .ag-cell-wrapper {
-          height: 24px;
-          line-height: 24px;
-        }
-        .ag-theme-alpine .ag-cell-value {
-          height: 24px;
-          line-height: 24px;
-        }
-      `}</style>
     </div>
   );
 }

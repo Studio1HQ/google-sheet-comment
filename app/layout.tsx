@@ -1,9 +1,8 @@
 "use client";
 
+import { VeltProvider } from "@veltdev/react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import { VeltProvider } from "@veltdev/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +26,6 @@ export default function RootLayout({
       >
         <VeltProvider apiKey={process.env.NEXT_PUBLIC_VELT_ID || ""}>
           {children}
-          <Toaster />
         </VeltProvider>
       </body>
     </html>

@@ -5,13 +5,11 @@ export type User = {
   uid: string;
   displayName: string;
   email: string;
-  photoURL: string;
 };
 
 export interface UserStore {
   user: User | null;
-  login: (user: User) => void;
-  logout: () => void;
+  setUser: (user: User) => void;
 }
 
 export const userIds = ["user001", "user002"];
@@ -21,8 +19,7 @@ export const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
       user: null,
-      login: (user) => set({ user }),
-      logout: () => set({ user: null }),
+      setUser: (user) => set({ user }),
     }),
     {
       name: "user-storage",
