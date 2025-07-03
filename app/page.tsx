@@ -21,16 +21,16 @@ const range = (len: number) => Array.from({ length: len }, (_, i) => i);
 
 const createProductData = () => {
   return [
-    { ProductID: "P001", ProductName: "Apple iPhone 14", Category: "Electronics", StockLevel: 50, RestockDate: "2024-07-10", Price: 999, Supplier: "TechWorld Inc." },
-    { ProductID: "P002", ProductName: "Samsung Galaxy S23", Category: "Electronics", StockLevel: 30, RestockDate: "2024-07-12", Price: 899, Supplier: "MobileCorp" },
-    { ProductID: "P003", ProductName: "Nike Air Max 2024", Category: "Footwear", StockLevel: 120, RestockDate: "2024-07-15", Price: 150, Supplier: "SportsGear Co." },
-    { ProductID: "P004", ProductName: "Levi's 501 Jeans", Category: "Clothing", StockLevel: 75, RestockDate: "2024-07-20", Price: 60, Supplier: "DenimWorks" },
-    { ProductID: "P005", ProductName: "KitchenAid Mixer", Category: "Appliances", StockLevel: 20, RestockDate: "2024-07-22", Price: 350, Supplier: "HomeSupplies" },
-    { ProductID: "P006", ProductName: "Dell XPS 13 Laptop", Category: "Electronics", StockLevel: 45, RestockDate: "2024-07-25", Price: 1200, Supplier: "ComputerWorld" },
-    { ProductID: "P007", ProductName: "Adidas Ultraboost", Category: "Footwear", StockLevel: 90, RestockDate: "2024-07-28", Price: 180, Supplier: "SportsGear Co." },
-    { ProductID: "P008", ProductName: "Calvin Klein T-Shirt", Category: "Clothing", StockLevel: 150, RestockDate: "2024-07-30", Price: 35, Supplier: "FashionHub" },
-    { ProductID: "P009", ProductName: "Sony WH-1000XM5", Category: "Electronics", StockLevel: 60, RestockDate: "2024-08-01", Price: 350, Supplier: "TechWorld Inc." },
-    { ProductID: "P010", ProductName: "Instant Pot 6 Qt", Category: "Appliances", StockLevel: 100, RestockDate: "2024-08-05", Price: 90, Supplier: "HomeSupplies" },
+    { ProductID: "P001", ProductName: "Apple", Category: "Electronics", StockLevel: 50, RestockDate: "2024-07-10", Price: 999, Supplier: "TechWorld" },
+    { ProductID: "P002", ProductName: "Samsung ", Category: "Electronics", StockLevel: 30, RestockDate: "2024-07-12", Price: 899, Supplier: "MobileCorp" },
+    { ProductID: "P003", ProductName: "Nike ", Category: "Footwear", StockLevel: 120, RestockDate: "2024-07-15", Price: 150, Supplier: "SportsGear" },
+    { ProductID: "P004", ProductName: "Levi", Category: "Clothing", StockLevel: 75, RestockDate: "2024-07-20", Price: 60, Supplier: "DenimWorks" },
+    { ProductID: "P005", ProductName: "Kitchen", Category: "Appliances", StockLevel: 20, RestockDate: "2024-07-22", Price: 350, Supplier: "Homes" },
+    { ProductID: "P006", ProductName: "Dell", Category: "Electronics", StockLevel: 45, RestockDate: "2024-07-25", Price: 1200, Supplier: "ComputerWorld" },
+    { ProductID: "P007", ProductName: "Adidas", Category: "Footwear", StockLevel: 90, RestockDate: "2024-07-28", Price: 180, Supplier: "SportsGear" },
+    { ProductID: "P008", ProductName: "Polo", Category: "Clothing", StockLevel: 150, RestockDate: "2024-07-30", Price: 35, Supplier: "FashionHub" },
+    { ProductID: "P009", ProductName: "Sony", Category: "Electronics", StockLevel: 60, RestockDate: "2024-08-01", Price: 350, Supplier: "TechWorld" },
+    { ProductID: "P010", ProductName: "UCB", Category: "Appliances", StockLevel: 100, RestockDate: "2024-08-05", Price: 90, Supplier: "Homes" },
   ];
 };
 
@@ -87,7 +87,7 @@ export default function Page() {
       field: getColumnLabel(i),
       headerName: getColumnLabel(i),  // Default header for columns beyond the data fields
       editable: true,
-      width: 72,
+      width: 90,
       cellRenderer: EditableCellRenderer,
       cellStyle,
       headerClass: "google-like-header",
