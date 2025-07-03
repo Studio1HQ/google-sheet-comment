@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { names, userIds, useUserStore } from "@/helper/userdb";
 import { useVeltClient, VeltCommentTool } from "@veltdev/react";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useMemo } from "react";
 
@@ -49,14 +50,45 @@ const Header: React.FC = () => {
   }, [client, user]);
 
   return (
-    <header
-      className={`flex items-center justify-between p-2 border-b bg-white`}
-    >
-      <div className="flex items-center gap-3">
+    <header className="flex items-center justify-between p-2 border-b bg-white">
+      <div className="flex flex-col justify-start items-start">
+        {/* Sheets Icon and Title */}
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-lg font-medium">Sheets</span>
-          </Link>
+          <Image
+            src="https://www.gstatic.com/images/branding/product/2x/sheets_2020q4_48dp.png"
+            alt="google-spreadsheet-icon"
+            // width={"40px"}
+            // height={"40px"}
+            width={40}
+            height={40}
+          />
+          <div>
+            <Link href="/" className="flex items-center">
+              <span className="text-lg font-medium">Sheets</span>
+            </Link>
+            {/* Menu Options */}
+            <div className=" flex items-center gap-2">
+              {[
+                "File",
+                "Edit",
+                "View",
+                "Insert",
+                "Format",
+                "Data",
+                "Tools",
+                "Help",
+              ].map((item) => (
+                <div
+                  className="flex items-center gap-2 hover:underline hover:cursor-pointer"
+                  key={item}
+                >
+                  <span className="text-sm">{item}</span>
+                </div>
+              ))}
+
+              {/* Add more menu items as necessary */}
+            </div>
+          </div>
         </div>
       </div>
 
