@@ -26,7 +26,7 @@ const createProductData = () => {
     { ProductID: "P003", ProductName: "Nike ", Category: "Footwear", StockLevel: 120, RestockDate: "2024-07-15", Price: 150, Supplier: "SportsGear" },
     { ProductID: "P004", ProductName: "Levi", Category: "Clothing", StockLevel: 75, RestockDate: "2024-07-20", Price: 60, Supplier: "DenimWorks" },
     { ProductID: "P005", ProductName: "Kitchen", Category: "Appliances", StockLevel: 20, RestockDate: "2024-07-22", Price: 350, Supplier: "Homes" },
-    { ProductID: "P006", ProductName: "Dell", Category: "Electronics", StockLevel: 45, RestockDate: "2024-07-25", Price: 1200, Supplier: "ComputerWorld" },
+    { ProductID: "P006", ProductName: "Dell", Category: "Electronics", StockLevel: 45, RestockDate: "2024-07-25", Price: 1200, Supplier: "Computer" },
     { ProductID: "P007", ProductName: "Adidas", Category: "Footwear", StockLevel: 90, RestockDate: "2024-07-28", Price: 180, Supplier: "SportsGear" },
     { ProductID: "P008", ProductName: "Polo", Category: "Clothing", StockLevel: 150, RestockDate: "2024-07-30", Price: 35, Supplier: "FashionHub" },
     { ProductID: "P009", ProductName: "Sony", Category: "Electronics", StockLevel: 60, RestockDate: "2024-08-01", Price: 350, Supplier: "TechWorld" },
@@ -69,7 +69,7 @@ const makeData = (rows: number, columns: number) => {
 
 export default function Page() {
   const COLUMNS_COUNT = 26;  // Setting the columns to 26
-  const DEFAULT_ROWS_COUNT = 100;
+  const DEFAULT_ROWS_COUNT = 80;
 
   const [rowData] = useState(() => makeData(DEFAULT_ROWS_COUNT, COLUMNS_COUNT));
 
