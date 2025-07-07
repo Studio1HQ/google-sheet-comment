@@ -17,26 +17,61 @@ const getColumnLabel = (index: number): string => {
 };
 
 const range = (len: number) => Array.from({ length: len }, (_, i) => i);
+  // Function to generate sample product data.
 
-const createEmptyCell = () => "";
+const createProductData = () => {
+  return [
+    { ProductID: "P001", ProductName: "Apple", Category: "Electronics", StockLevel: 50, RestockDate: "2024-07-10", Price: 999, Supplier: "TechWorld" },
+    { ProductID: "P002", ProductName: "Samsung ", Category: "Electronics", StockLevel: 30, RestockDate: "2024-07-12", Price: 899, Supplier: "MobileCorp" },
+    { ProductID: "P003", ProductName: "Nike ", Category: "Footwear", StockLevel: 120, RestockDate: "2024-07-15", Price: 150, Supplier: "SportsGear" },
+    { ProductID: "P004", ProductName: "Levi", Category: "Clothing", StockLevel: 75, RestockDate: "2024-07-20", Price: 60, Supplier: "DenimWorks" },
+    { ProductID: "P005", ProductName: "Kitchen", Category: "Appliances", StockLevel: 20, RestockDate: "2024-07-22", Price: 350, Supplier: "Homes" },
+    { ProductID: "P006", ProductName: "Dell", Category: "Electronics", StockLevel: 45, RestockDate: "2024-07-25", Price: 1200, Supplier: "Computer" },
+    { ProductID: "P007", ProductName: "Adidas", Category: "Footwear", StockLevel: 90, RestockDate: "2024-07-28", Price: 180, Supplier: "SportsGear" },
+    { ProductID: "P008", ProductName: "Polo", Category: "Clothing", StockLevel: 150, RestockDate: "2024-07-30", Price: 35, Supplier: "FashionHub" },
+    { ProductID: "P009", ProductName: "Sony", Category: "Electronics", StockLevel: 60, RestockDate: "2024-08-01", Price: 350, Supplier: "TechWorld" },
+    { ProductID: "P010", ProductName: "UCB", Category: "Appliances", StockLevel: 100, RestockDate: "2024-08-05", Price: 90, Supplier: "Homes" },
+  ];
+};
 
-const makeEmptyData = (rows: number, cols: number) => {
-  return range(rows).map(() => {
-    const rowData: Record<string, string> = {};
-    for (let i = 0; i < cols; i++) {
-      rowData[getColumnLabel(i)] = createEmptyCell();
+const makeData = (rows: number, columns: number) => {
+  const productData = createProductData();
+
+  // Create the header row as the first row in the data
+  const headers = [
+    "Product ID", "Product Name", "Category", "Stock Level", "Restock Date", "Price", "Supplier"
+  ];
+
+  const data = range(rows).map((rowIndex) => {
+    const rowData: Record<string, string | number> = {};  // Changed to allow string or number
+
+    for (let colIndex = 0; colIndex < columns; colIndex++) {
+      const colLabel = getColumnLabel(colIndex);
+
+      // The first row is the header row, so populate it with the headers
+      if (rowIndex === 0) {
+        rowData[colLabel] = headers[colIndex] || "";  // Fill the first row with headers
+      } else {
+        // Otherwise, populate the product data
+        if (colIndex < 7 && rowIndex - 1 < productData.length) {
+          rowData[colLabel] = Object.values(productData[rowIndex - 1])[colIndex];  // Adjust row index to match data
+        } else {
+          rowData[colLabel] = "";
+        }
+      }
     }
     return rowData;
   });
+
+  return data;
 };
 
-export default function Page() {
-  const COLUMNS_COUNT = 26;
-  const DEFAULT_ROWS_COUNT = 100;
 
-  const [rowData] = useState(() =>
-    makeEmptyData(DEFAULT_ROWS_COUNT, COLUMNS_COUNT)
-  );
+export default function Page() {
+  const COLUMNS_COUNT = 26;  // Setting the columns to 26
+  const DEFAULT_ROWS_COUNT = 80;
+
+  const [rowData] = useState(() => makeData(DEFAULT_ROWS_COUNT, COLUMNS_COUNT));
 
   const columnDefs = useMemo(() => {
     const cellStyle = {
@@ -50,9 +85,9 @@ export default function Page() {
 
     return range(COLUMNS_COUNT).map((i) => ({
       field: getColumnLabel(i),
-      headerName: getColumnLabel(i),
+      headerName: getColumnLabel(i),  // Default header for columns beyond the data fields
       editable: true,
-      width: 72,
+      width: 90,
       cellRenderer: EditableCellRenderer,
       cellStyle,
       headerClass: "google-like-header",
@@ -81,23 +116,23 @@ export default function Page() {
       <VeltComments popoverMode={true} />
       <Header />
 
-      <div
-        className="ag-theme-alpine flex-1"
-        style={{ overflowX: "hidden", height: "100%", minHeight: "500px" }}
-      >
-        <AgGridReact
-          rowData={rowData}
-          columnDefs={columnDefs}
-          gridOptions={gridOptions}
-          headerHeight={24}
-          rowHeight={24}
-          suppressCellFocus={true}
-          suppressMovableColumns={true}
-          suppressFieldDotNotation={true}
-          debounceVerticalScrollbar={true}
-          suppressContextMenu={true}
-        />
-      </div>
+     <div className="ag-theme-alpine flex-1 overflow-x-auto scrollbar-hide !p-0" style={{ height: "100%", minHeight: "500px" }}>
+  <div style={{ minWidth: `${COLUMNS_COUNT * 72}px` }}>
+    <AgGridReact
+      rowData={rowData}
+      columnDefs={columnDefs}
+      gridOptions={gridOptions}
+      headerHeight={24}
+      rowHeight={24}
+      suppressCellFocus={true}
+      suppressMovableColumns={true}
+      suppressFieldDotNotation={true}
+      debounceVerticalScrollbar={true}
+      suppressContextMenu={true}
+    />
+  </div>
+</div>
+
     </div>
   );
 }
@@ -129,7 +164,7 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
-        className="w-full h-full focus:outline-none bg-transparent px-1 py-0"
+        className="px-2 w-full h-full focus:outline-none bg-transparent"
         style={{
           fontFamily: "Arial, sans-serif",
           fontSize: "12px",
@@ -138,7 +173,7 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
           boxSizing: "border-box",
         }}
       />
-      <VeltCommentBubble targetElementId={cellId} />
+      <VeltCommentBubble targetElementId={cellId}/>
     </div>
   );
 });

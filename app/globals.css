@@ -137,7 +137,8 @@
   border-left: none;
   border-right: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
-  padding: 0 4px;
+  /* padding: 0 4px; */
+  padding: 0 !important;
   height: 24px;
   line-height: 24px;
 }
