@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { names, userIds, useUserStore } from "@/helper/userdb";
-import { useVeltClient, VeltCommentTool } from "@veltdev/react";
+import { useVeltClient, VeltCommentTool, VeltNotificationsTool } from "@veltdev/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useMemo } from "react";
@@ -93,7 +93,7 @@ const Header: React.FC = () => {
       </div>
 
       <div className="flex items-center ml-4 gap-4">
-        <VeltCommentTool />
+      <VeltNotificationsTool />
         {user ? (
           <div className="flex items-center gap-4">
             <span className="text-gray-700 font-medium">

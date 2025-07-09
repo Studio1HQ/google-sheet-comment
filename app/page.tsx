@@ -1,7 +1,7 @@
 "use client";
 
 import Header from "@/components/header";
-import { useSetDocument, VeltCommentBubble, VeltComments } from "@veltdev/react";
+import { useSetDocument, VeltCommentBubble, VeltComments, VeltCommentTool } from "@veltdev/react";
 import {
   AllCommunityModule,
   GridOptions,
@@ -74,22 +74,12 @@ export default function Page() {
   const [rowData] = useState(() => makeData(DEFAULT_ROWS_COUNT, COLUMNS_COUNT));
 
   const columnDefs = useMemo(() => {
-    const cellStyle = {
-      borderRight: "1px solid #e0e0e0",
-      borderBottom: "1px solid #e0e0e0",
-      padding: "0 4px",
-      fontFamily: "Arial, sans-serif",
-      fontSize: "12px",
-      lineHeight: "20px",
-    };
-
     return range(COLUMNS_COUNT).map((i) => ({
       field: getColumnLabel(i),
       headerName: getColumnLabel(i),  // Default header for columns beyond the data fields
       editable: true,
-      width: 90,
+      width: 120,
       cellRenderer: EditableCellRenderer,
-      cellStyle,
       headerClass: "google-like-header",
     }));
   }, [COLUMNS_COUNT]);
@@ -117,13 +107,13 @@ export default function Page() {
       <Header />
 
      <div className="ag-theme-alpine flex-1 overflow-x-auto scrollbar-hide !p-0" style={{ height: "100%", minHeight: "500px" }}>
-  <div style={{ minWidth: `${COLUMNS_COUNT * 72}px` }}>
+  <div style={{ minWidth: `${COLUMNS_COUNT * 120}px` }}>
     <AgGridReact
       rowData={rowData}
       columnDefs={columnDefs}
       gridOptions={gridOptions}
-      headerHeight={24}
-      rowHeight={24}
+      headerHeight={36}
+      rowHeight={40}
       suppressCellFocus={true}
       suppressMovableColumns={true}
       suppressFieldDotNotation={true}
@@ -149,6 +139,9 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
 }) {
   const [value, setValue] = useState(params.value);
   const cellId = `cell-${params.node.rowIndex}-${params.colDef.field}`;
+  
+  // Check if cell has meaningful data (not empty or just whitespace)
+  const hasData = value && value.toString().trim() !== '';
 
   const onBlur = useCallback(() => {
     params.node.setDataValue(params.colDef.field, value);
@@ -156,24 +149,49 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
 
   return (
     <div
-      className="relative w-full h-full"
+      className="relative w-full h-full group hover:bg-gray-50/30 transition-colors duration-150"
       id={cellId}
-      style={{ height: "24px" }}
+      data-velt-target-comment-element-id={cellId}
+      style={{ height: "40px" }}
     >
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
-        className="px-2 w-full h-full focus:outline-none bg-transparent"
+        className={`w-full h-full focus:outline-none bg-transparent ${hasData ? 'pl-2 pr-8' : 'px-2'}`}
         style={{
           fontFamily: "Arial, sans-serif",
-          fontSize: "12px",
-          height: "24px",
-          lineHeight: "24px",
+          fontSize: "13px",
+          height: "40px",
+          lineHeight: "18px",
           boxSizing: "border-box",
         }}
       />
-      <VeltCommentBubble targetElementId={cellId}/>
+      
+      {/* Show comment tools only for cells with data */}
+      {hasData && (
+        <>
+          {/* Comment tool positioned with proper spacing and minimal size */}
+          <div className="absolute top-1 right-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out">
+            <div className="bg-white rounded shadow-sm border border-gray-200 p-1 hover:shadow-md transition-shadow">
+              <VeltCommentTool 
+                targetElementId={cellId}
+                style={{ width: '18px', height: '18px', fontSize: '11px' }}
+              />
+            </div>
+          </div>
+          
+          {/* Comment bubble with better positioning and spacing */}
+          <div className="absolute -top-1.5 -left-1.5 z-15">
+            <div className="scale-90 origin-top-left">
+              <VeltCommentBubble 
+                targetElementId={cellId}
+                commentCountType="total"
+              />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 });
