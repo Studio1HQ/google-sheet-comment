@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { names, userIds, useUserStore } from "@/helper/userdb";
-import { useVeltClient, VeltCommentTool, VeltNotificationsTool } from "@veltdev/react";
+import { useVeltClient, VeltNotificationsTool } from "@veltdev/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useMemo } from "react";
