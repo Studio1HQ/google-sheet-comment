@@ -153,7 +153,7 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
-        className={`w-full h-full focus:outline-none bg-transparent text-sm px-2 ${hasData ? 'pr-10' : ''}`}
+        className={`w-full h-full focus:outline-none bg-transparent text-sm px-2 ${hasData ? 'pr-6' : ''}`}
         style={{
           fontFamily: "Arial, sans-serif",
           boxSizing: "border-box",
@@ -161,23 +161,12 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
       />
       
       {hasData && (
-        <>
-          <div className="absolute top-0 right-0 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <div className="p-1 rounded-full hover:bg-gray-200 transition-colors cursor-pointer mr-1">
-              <VeltCommentTool 
-                targetElementId={cellId}
-                style={{ width: '20px', height: '20px' }}
-              />
-            </div>
-          </div>
-          
-          {/* <div className="absolute top-0 right-0">
-            <VeltCommentBubble
-              targetElementId={cellId}
-              commentCountType="total"
-            />
-          </div> */}
-        </>
+        <div className="absolute top-0 right-0 h-full flex items-center justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <VeltCommentTool 
+            targetElementId={cellId}
+            style={{ width: '20px', height: '20px', marginRight: '0px' }}
+          />
+        </div>
       )}
     </div>
   );
