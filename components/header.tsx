@@ -3,7 +3,8 @@ import { names, userIds, useUserStore } from "@/helper/userdb";
 import { useVeltClient, VeltNotificationsTool } from "@veltdev/react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const Header: React.FC = () => {
   const { user, setUser } = useUserStore();
@@ -12,10 +13,16 @@ const Header: React.FC = () => {
   const predefinedUsers = useMemo(
     () =>
       userIds.map((uid, index) => {
+        // Use DiceBear Avatars for demonstration
+        const avatarUrls = [
+          "https://api.dicebear.com/7.x/pixel-art/svg?seed=Nany",
+          "https://api.dicebear.com/7.x/pixel-art/svg?seed=Mary",
+        ];
         return {
           uid: uid,
           displayName: names[index],
           email: `${names[index].toLowerCase()}@gmail.com`,
+          photoUrl: avatarUrls[index],
         };
       }),
     []
@@ -30,13 +37,6 @@ const Header: React.FC = () => {
     }
   }, [user, setUser, predefinedUsers]);
 
-  const handleUserChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedUser = predefinedUsers.find((u) => u.uid === e.target.value);
-    if (selectedUser) {
-      setUser(selectedUser);
-    }
-  };
-
   useEffect(() => {
     if (!client || !user) return;
     const veltUser = {
@@ -44,10 +44,31 @@ const Header: React.FC = () => {
       organizationId: "organization_id",
       name: user.displayName,
       email: user.email,
+      photoUrl: user.photoUrl, // Pass avatar to Velt
     };
 
     client.identify(veltUser);
   }, [client, user]);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
     <header className="flex items-center justify-between p-2 border-b bg-white">
@@ -96,20 +117,41 @@ const Header: React.FC = () => {
       <VeltNotificationsTool />
         {user ? (
           <div className="flex items-center gap-4">
-            <span className="text-gray-700 font-medium">
-              {user.displayName}
-            </span>
-            <select
-              value={user.uid}
-              onChange={handleUserChange}
-              className="p-2 border rounded"
-            >
-              {predefinedUsers.map((predefinedUser) => (
-                <option key={predefinedUser.uid} value={predefinedUser.uid}>
-                  {predefinedUser.displayName}
-                </option>
-              ))}
-            </select>
+            {/* Only show the dropdown with avatar and name */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                className="flex items-center gap-2 p-2 border rounded bg-white hover:bg-gray-50 min-w-[120px]"
+                type="button"
+                onClick={() => setDropdownOpen((open) => !open)}
+              >
+                <Avatar>
+                  <AvatarImage src={user.photoUrl} alt={user.displayName} />
+                  <AvatarFallback>{user.displayName[0]}</AvatarFallback>
+                </Avatar>
+                <span>{user.displayName}</span>
+                <svg className={`ml-1 w-4 h-4 transition-transform ${dropdownOpen ? "rotate-180" : "rotate-0"}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-10">
+                  {predefinedUsers.map((predefinedUser) => (
+                    <div
+                      key={predefinedUser.uid}
+                      className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 ${user.uid === predefinedUser.uid ? "bg-gray-50" : ""}`}
+                      onClick={() => {
+                        setUser(predefinedUser);
+                        setDropdownOpen(false);
+                      }}
+                    >
+                      <Avatar>
+                        <AvatarImage src={predefinedUser.photoUrl} alt={predefinedUser.displayName} />
+                        <AvatarFallback>{predefinedUser.displayName[0]}</AvatarFallback>
+                      </Avatar>
+                      <span>{predefinedUser.displayName}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <Button
