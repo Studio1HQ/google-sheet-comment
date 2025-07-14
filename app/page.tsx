@@ -103,7 +103,7 @@ export default function Page() {
 
   return (
     <div className="h-screen w-screen flex flex-col bg-white text-xs">
-      <VeltComments popoverMode={true} />
+      <VeltComments popoverMode={true} customAutocompleteSearch={true}  />
       <Header />
 
       <div className="ag-theme-alpine flex-1 w-full">
