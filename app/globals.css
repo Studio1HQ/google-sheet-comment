@@ -136,6 +136,9 @@
 .ag-header-cell {
   border-right: 1px solid var(--ag-border-color);
 }
+.ag-cell-normal-height{
+  border-top: 0;
+}
 
 .ag-cell {
   border-right: 1px solid var(--ag-row-border-color);
@@ -168,4 +171,8 @@
   border-style: solid;
   border-width: 0 8px 8px 0;
   border-color: transparent #6366f1 transparent transparent;
+}
+.ag-cell-wrapper{
+  height: 100%;
+  width: 100%;
 }

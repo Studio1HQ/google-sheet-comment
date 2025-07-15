@@ -71,7 +71,7 @@ export default function Page() {
       headerName: getColumnLabel(i),
       editable: true,
       // Remove fixed width to allow auto-sizing
-      width: 130,
+      width: 140,
       cellRenderer: EditableCellRenderer,
       headerClass: "google-like-header",
     }));
@@ -138,7 +138,7 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
 
   return (
     <div
-      className={`relative w-full h-full group ${hasData && 'w-44'}`}
+      className={`relative w-full h-full group`}
       id={cellId}
       data-velt-target-comment-element-id={cellId}
     >
@@ -146,18 +146,18 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
-        className="w-full h-full focus:outline-none bg-transparent text-sm px-2 pr-8" // Consistent padding-right
+        className="w-full h-full focus:outline-none bg-transparent text-sm px-2 pr-9" // Consistent padding-right
         style={{
           fontFamily: "Arial, sans-serif",
           boxSizing: "border-box",
         }}
       />
       {hasData && (
-        <div className="absolute top-0 right-0 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-2">
-          <div className="rounded-full transition-colors cursor-pointer mr-1">
+        <div className="absolute top-1 right-2 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-2">
+          <div className="rounded-full transition-colors cursor-pointer">
             <VeltCommentTool
               targetElementId={cellId}
-              style={{ width: "20px", height: "20px" }}
+              style={{ width: "18px", height: "18px" }}
             />
           </div>
         </div>
