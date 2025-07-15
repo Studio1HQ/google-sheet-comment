@@ -2,14 +2,13 @@
 
 import Header from "@/components/header";
 import { useSetDocument, VeltComments, VeltCommentTool } from "@veltdev/react";
-// import { VeltCommentBubble } from "@veltdev/react/comment-bubble";
 import {
   AllCommunityModule,
   GridOptions,
   ModuleRegistry,
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useRef } from "react";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -18,13 +17,12 @@ const getColumnLabel = (index: number): string => {
 };
 
 const range = (len: number) => Array.from({ length: len }, (_, i) => i);
-  // Function to generate sample product data.
 
 const createProductData = () => {
   return [
     { ProductID: "P001", ProductName: "Apple", Category: "Electronics", StockLevel: 50, RestockDate: "2024-07-10", Price: 999, Supplier: "TechWorld" },
-    { ProductID: "P002", ProductName: "Samsung ", Category: "Electronics", StockLevel: 30, RestockDate: "2024-07-12", Price: 899, Supplier: "MobileCorp" },
-    { ProductID: "P003", ProductName: "Nike ", Category: "Footwear", StockLevel: 120, RestockDate: "2024-07-15", Price: 150, Supplier: "SportsGear" },
+    { ProductID: "P002", ProductName: "Samsung", Category: "Electronics", StockLevel: 30, RestockDate: "2024-07-12", Price: 899, Supplier: "MobileCorp" },
+    { ProductID: "P003", ProductName: "Nike", Category: "Footwear", StockLevel: 120, RestockDate: "2024-07-15", Price: 150, Supplier: "SportsGear" },
     { ProductID: "P004", ProductName: "Levi", Category: "Clothing", StockLevel: 75, RestockDate: "2024-07-20", Price: 60, Supplier: "DenimWorks" },
     { ProductID: "P005", ProductName: "Kitchen", Category: "Appliances", StockLevel: 20, RestockDate: "2024-07-22", Price: 350, Supplier: "Homes" },
     { ProductID: "P006", ProductName: "Dell", Category: "Electronics", StockLevel: 45, RestockDate: "2024-07-25", Price: 1200, Supplier: "Computer" },
@@ -37,25 +35,19 @@ const createProductData = () => {
 
 const makeData = (rows: number, columns: number) => {
   const productData = createProductData();
-
-  // Create the header row as the first row in the data
   const headers = [
     "Product ID", "Product Name", "Category", "Stock Level", "Restock Date", "Price", "Supplier"
   ];
 
   const data = range(rows).map((rowIndex) => {
-    const rowData: Record<string, string | number> = {};  // Changed to allow string or number
-
+    const rowData: Record<string, string | number> = {};
     for (let colIndex = 0; colIndex < columns; colIndex++) {
       const colLabel = getColumnLabel(colIndex);
-
-      // The first row is the header row, so populate it with the headers
       if (rowIndex === 0) {
-        rowData[colLabel] = headers[colIndex] || "";  // Fill the first row with headers
+        rowData[colLabel] = headers[colIndex] || "";
       } else {
-        // Otherwise, populate the product data
         if (colIndex < 7 && rowIndex - 1 < productData.length) {
-          rowData[colLabel] = Object.values(productData[rowIndex - 1])[colIndex];  // Adjust row index to match data
+          rowData[colLabel] = Object.values(productData[rowIndex - 1])[colIndex];
         } else {
           rowData[colLabel] = "";
         }
@@ -67,19 +59,19 @@ const makeData = (rows: number, columns: number) => {
   return data;
 };
 
-
 export default function Page() {
-  const COLUMNS_COUNT = 26;  // Setting the columns to 26
-  const DEFAULT_ROWS_COUNT = 80;
-
+  const COLUMNS_COUNT = 26;
+  const DEFAULT_ROWS_COUNT = 40;
   const [rowData] = useState(() => makeData(DEFAULT_ROWS_COUNT, COLUMNS_COUNT));
+  const gridRef = useRef<AgGridReact>(null);
 
   const columnDefs = useMemo(() => {
     return range(COLUMNS_COUNT).map((i) => ({
       field: getColumnLabel(i),
-      headerName: getColumnLabel(i),  // Default header for columns beyond the data fields
+      headerName: getColumnLabel(i),
       editable: true,
-      width: 120,
+      // Remove fixed width to allow auto-sizing
+      width: 130,
       cellRenderer: EditableCellRenderer,
       headerClass: "google-like-header",
     }));
@@ -99,15 +91,17 @@ export default function Page() {
     []
   );
 
+
+
   useSetDocument("sheet-1", { documentName: "salary sheet" });
 
   return (
     <div className="h-screen w-screen flex flex-col bg-white text-xs">
-      <VeltComments popoverMode={true} customAutocompleteSearch={true}  />
+      <VeltComments popoverMode={true} customAutocompleteSearch={true} />
       <Header />
-
       <div className="ag-theme-alpine flex-1 w-full">
         <AgGridReact
+          ref={gridRef}
           rowData={rowData}
           columnDefs={columnDefs}
           gridOptions={gridOptions}
@@ -136,7 +130,6 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
 }) {
   const [value, setValue] = useState(params.value);
   const cellId = `cell-${params.node.rowIndex}-${params.colDef.field}`;
-  
   const hasData = value && value.toString().trim() !== '';
 
   const onBlur = useCallback(() => {
@@ -145,7 +138,7 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
 
   return (
     <div
-      className="relative w-full h-full group"
+      className={`relative w-full h-full group ${hasData && 'w-44'}`}
       id={cellId}
       data-velt-target-comment-element-id={cellId}
     >
@@ -153,31 +146,21 @@ const EditableCellRenderer = React.memo(function EditableCellRenderer(params: {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onBlur={onBlur}
-        className={`w-full h-full focus:outline-none bg-transparent text-sm px-2 ${hasData ? 'pr-10' : ''}`}
+        className="w-full h-full focus:outline-none bg-transparent text-sm px-2 pr-8" // Consistent padding-right
         style={{
           fontFamily: "Arial, sans-serif",
           boxSizing: "border-box",
         }}
       />
-      
       {hasData && (
-        <>
-          <div className="absolute top-0 right-0 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <div className="p-1 rounded-full transition-colors cursor-pointer mr-1">
-              <VeltCommentTool 
-                targetElementId={cellId}
-                style={{ width: '20px', height: '20px' }}
-              />
-            </div>
-          </div>
-          
-          {/* <div className="absolute top-0 right-0">
-            <VeltCommentBubble
+        <div className="absolute top-0 right-0 h-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-2">
+          <div className="rounded-full transition-colors cursor-pointer mr-1">
+            <VeltCommentTool
               targetElementId={cellId}
-              commentCountType="total"
+              style={{ width: "20px", height: "20px" }}
             />
-          </div> */}
-        </>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -140,7 +140,7 @@
 .ag-cell {
   border-right: 1px solid var(--ag-row-border-color);
   border-bottom: 1px solid var(--ag-row-border-color);
-  padding: 0 10px !important;
+  padding: 0 !important;
   display: flex;
   align-items: center;
 }
